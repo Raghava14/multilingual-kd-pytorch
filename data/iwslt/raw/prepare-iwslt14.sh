@@ -107,7 +107,9 @@ cd ..
 rm -r text
 mkdir -p text/train_data
 mkdir -p text/test_data
+mkdir -p text/valid_data
 cp raw/iwslt14.tokenized/train.en-* text/train_data/
 cp raw/iwslt14.tokenized/test.en-* text/test_data/
+cp raw/iwslt14.tokenized/valid.en-* text/valid_data/
 cd ../../
 python preprocess_universal.py --pref=data/iwslt  --joined-dictionary

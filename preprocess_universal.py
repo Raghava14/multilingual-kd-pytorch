@@ -48,6 +48,7 @@ def main(args):
     textdir = os.path.join(args.pref, 'text')
     train_dir = os.path.join(textdir, 'train_data')
     test_dir = os.path.join(textdir, 'test_data')
+    valid_dir = os.path.join(textdir, 'valid_data')
     # if args.expert != '':
     # train_files = glob.glob('{}/train.{}-en.*.e'.format(train_dir, args.expert)) + \
     #               glob.glob('{}/train.en-{}.*.e'.format(train_dir, args.expert))
@@ -57,8 +58,10 @@ def main(args):
     train_files = [f for f in train_files if len(f.split('.')) in [3, 5]]
     test_files = glob.glob('{}/test.*-*.*'.format(test_dir))
     test_files = [f for f in test_files if len(f.split('.')) in [3, 5]]
-    lng_pairs = set([f.split('/')[-1].split(".")[1] for f in (train_files + test_files)])
-    print(train_files, test_files, lng_pairs)
+    valid_files = glob.glob('{}/valid.*-*.*'.format(valid_dir))
+    valid_files = [f for f in valid_files if len(f.split('.')) in [3, 5]]
+    lng_pairs = set([f.split('/')[-1].split(".")[1] for f in (train_files + test_files + valid_files)])
+    print(train_files, test_files, valid_files, lng_pairs)
 
     def build_dictionary(filenames):
         d = dictionary.Dictionary()
@@ -151,6 +154,10 @@ def main(args):
             lng_pair, lang, num_workers=args.workers)
         make_binary_dataset(
             os.path.join(test_dir, 'test'),
+            os.path.join(destdir, 'test'),
+            lng_pair, lang, num_workers=1)
+        make_binary_dataset(
+            os.path.join(valid_dir, 'valid'),
             os.path.join(destdir, 'valid'),
             lng_pair, lang, num_workers=1)
 
@@ -186,3 +193,4 @@ if __name__ == '__main__':
     parser = get_parser()
     args = parser.parse_args()
     main(args)
+
